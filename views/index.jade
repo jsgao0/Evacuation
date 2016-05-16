@@ -71,8 +71,12 @@ block content
             div(class='col-xs-12 col-sm-12 col-md-12 sanctuary-list')
                 div(
                     class='col-md-4 sanctuary'
-                    ng-repeat='sanctuary in sanctuaryList'
+                    ng-repeat='(index, sanctuary) in sanctuaryList'
                 )
+                    div(
+                        class='cancel-button'
+                        ng-click='deleteSanctuary(index)'
+                    ) X
                     p
                         label 避難所名稱:
                         input(ng-model='sanctuary.name')
@@ -88,17 +92,14 @@ block content
                 div(
                     class='col-md-4 click-button add-sanctuary'
                     ng-click='appendSanctuaryList()'
-                )
-                    增加避難所
+                ) 增加避難所
 
             div(class='col-xs-12 col-sm-12 col-md-12 button-list')
                 div(
                     class='col-sm-12 col-md-6 click-button update-sanctuary'
                     ng-click='updateSanctuaryList()'
-                )
-                    更新資料
+                ) 更新資料
                 div(
                     class='col-sm-12 col-md-6 click-button delete-sanctuary'
                     ng-click='deleteSanctuaryList()'
-                )
-                    刪除資料
+                ) 刪除資料

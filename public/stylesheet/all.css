@@ -15,12 +15,28 @@
 
 .sanctuary {
     padding: 10px;
+    position: relative;
+}
+
+.cancel-button {
+    background: #FF686B;
+    color: #FFF;
+    padding: 3px 5px;
+    position: absolute;
+    right: 4px;
+    top: 2px;
+}
+
+.cancel-button:hover {
+    cursor: pointer;
+    opacity: .7;
 }
 
 .click-button {
     background: gray !important;
     color: white;
-    padding: 76px;
+    font-size: 28px;
+    padding: 66px;
     text-align: center;
 }
 

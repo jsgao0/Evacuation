@@ -67,7 +67,7 @@ uploadApp.service('dataService', function ($http) {
         var evacuationInfo = {};
         $http({
             method: 'PUT',
-            url: 'https://evacuation.herokuapp.com/' + townId + '/' + villageId + '/sanctuaries',
+            url: '/' + townId + '/' + villageId + '/sanctuaries',
             data: body
         }).then(function (result) {
             callback(result);
@@ -151,6 +151,7 @@ uploadApp.controller('selectorController', function ($scope, dataService) {
       var townId = $scope.selectedTown.town_id;
       var villageId = $scope.selectedVillage.village_id;
       dataService.renderEvacuationInfoByTownIdAndVillageId(townId, villageId, function(evacuationInfo) {
+          console.log(evacuationInfo);
           $scope.evacuationInfo = evacuationInfo;
           $scope.sanctuaryList = $scope.evacuationInfo.evacuatedDirection.sanctuaries;
       });
@@ -171,9 +172,17 @@ uploadApp.controller('selectorController', function ($scope, dataService) {
       var villageId = $scope.selectedVillage.village_id;
       var body = angular.copy($scope.evacuationInfo);
       dataService.updateEvacuationInfoByTownIdAndVillageId(townId, villageId, body, function(result) {
-          console.log(result);
+          var reCode = parseInt(JSON.parse(result.data).reCode) || 0;
+          var reMessage = JSON.parse(result.data).reMessage || "";
+          alert(reMessage);
+          console.log(JSON.parse(result.data));
       });
     // angular.copy($scope.evacuationInfo); // return value;
+  };
+  $scope.deleteSanctuary = function(sanctuaryIndex) {
+  console.log( $scope.sanctuaryList);
+      $scope.sanctuaryList.splice(sanctuaryIndex, 1);
+      console.log( $scope.sanctuaryList);
   };
   $scope.deleteSanctuaryList = function() {
       alert('還沒實作喔～');
