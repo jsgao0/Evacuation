@@ -44,12 +44,32 @@ uploadApp.service('dataService', function ($http) {
             // or server returns response with an error status.
         });
     };
+    self.renderEvacuationInfoByTownIdAndVillageId = function(townId, villageId, callback) {
+        var evacuationInfo = {};
+        $http({
+            method: 'JSONP',
+            url: 'https://evacuation.herokuapp.com/' + townId + '/' + villageId + '/sanctuaries?callback=JSON_CALLBACK'
+        }).then(function (result) {
+            try {
+                evacuationInfo = JSON.parse(result.data);
+            } catch(Exception) {
+                evacuationInfo = {};
+            }
+            callback(evacuationInfo);
+        }, function (response) {
+            console.log(response);
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+        });
+    };
 });
 
 
 uploadApp.controller('selectorController', function ($scope, dataService) {
   $scope.countyList = [];
   $scope.townList = [];
+  $scope.villageList = [];
+  $scope.sanctuaryList = [];
   dataService.renderCountyList(function(countyList) {
       $scope.countyList = countyList;
       $scope.selectedCounty = $scope.countyList[0];
@@ -68,6 +88,14 @@ uploadApp.controller('selectorController', function ($scope, dataService) {
       dataService.renderVillageListByTownId(townId, function(villageList) {
           $scope.villageList = villageList;
           $scope.selectedVillage = $scope.villageList[0];
+          $scope.renderEvacuationInfoByTownIdAndVillageId();
+      });
+  };
+  $scope.renderEvacuationInfoByTownIdAndVillageId = function() {
+      var townId = $scope.selectedTown.town_id;
+      var villageId = $scope.selectedTown.villageId;
+      dataService.renderEvacuationInfoByTownIdAndVillageId(townId, villageId, function(evacuationInfo) {
+          $scope.sanctuaryList = evacuationInfo.evacuatedDirection.sanctuaries;
       });
   };
 });

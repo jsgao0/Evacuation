@@ -8,24 +8,29 @@ block content
     p= desc
     div
         div(ng-controller='selectorController')
-            div(class='col-md-3')
+            div(class='col-md-4')
                 select(
                     class='col-md-12'
                     ng-model='selectedCounty'
                     ng-options='county as county.county for county in countyList track by county.county_id'
                     ng-change='renderTownListByCountyId()'
                 )
-            div(class='col-md-3')
+            div(class='col-md-4')
                 select(
                     class='col-md-12'
                     ng-model='selectedTown'
                     ng-options='town as town.town for town in townList track by town.town_id'
-                    ng-change='renderVillageListByCountyIdAndTownId()'
+                    ng-change='renderVillageListByTownId()'
                 )
-            div(class='col-md-3')
+            div(class='col-md-4')
                 select(
                     class='col-md-12'
                     ng-model='selectedVillage'
                     ng-options='village as village.village for village in villageList track by village.village_id'
+                    ng-change='renderEvacuationInfoByTownIdAndVillageId()'
                 )
-            div(class='col-md-3') 4
+            div(class='col-md-12')
+                div(
+                    class='col-md-6'
+                    ng-repeat='sanctuary in sanctuaryList'
+                )
