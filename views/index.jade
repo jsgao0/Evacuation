@@ -7,30 +7,98 @@ block content
     h1= title
     p= desc
     div
-        div(ng-controller='selectorController')
-            div(class='col-md-4')
+        div(
+            class=''
+            ng-controller='selectorController'
+        )
+            div(class='col-xs-12 col-sm-12 col-md-4')
                 select(
-                    class='col-md-12'
+                    class='col-xs-12 col-sm-12 col-md-12'
                     ng-model='selectedCounty'
                     ng-options='county as county.county for county in countyList track by county.county_id'
                     ng-change='renderTownListByCountyId()'
                 )
-            div(class='col-md-4')
+            div(class='col-xs-12 col-sm-12 col-md-4')
                 select(
-                    class='col-md-12'
+                    class='col-xs-12 col-sm-12 col-md-12'
                     ng-model='selectedTown'
                     ng-options='town as town.town for town in townList track by town.town_id'
                     ng-change='renderVillageListByTownId()'
                 )
-            div(class='col-md-4')
+            div(class='col-xs-12 col-sm-12 col-md-4')
                 select(
-                    class='col-md-12'
+                    class='col-xs-12 col-sm-12 col-md-12'
                     ng-model='selectedVillage'
                     ng-options='village as village.village for village in villageList track by village.village_id'
                     ng-change='renderEvacuationInfoByTownIdAndVillageId()'
                 )
-            div(class='col-md-12')
+            div(class='col-xs-12 col-sm-12 col-md-12 evacuation-info')
+                div(class='col-md-3')
+                    p
+                        label 災害應變中心名稱:
+                        input(ng-model='evacuationInfo.responseCenter.name')
+                    p
+                        label 災害應變中心電話:
+                        input(ng-model='evacuationInfo.responseCenter.phoneNumber')
+
+                div(class='col-md-3')
+                    p
+                        label 里長姓名:
+                        input(ng-model='evacuationInfo.villageHead.name')
+                    p
+                        label 里長電話:
+                        input(ng-model='evacuationInfo.villageHead.phoneNumber')
+                    p
+                        label 里長手機:
+                        input(ng-model='evacuationInfo.villageHead.cellphoneNumber')
+
+                div(class='col-md-3')
+                    p
+                        label 警察局名稱:
+                        input(ng-model='evacuationInfo.policeStation.name')
+                    p
+                        label 警察局電話:
+                        input(ng-model='evacuationInfo.policeStation.phoneNumber')
+
+                div(class='col-md-3')
+                    p
+                        label 消防隊名稱:
+                        input(ng-model='evacuationInfo.fireBrigade.name')
+                    p
+                        label 消防隊電話:
+                        input(ng-model='evacuationInfo.fireBrigade.phoneNumber')
+
+            div(class='col-xs-12 col-sm-12 col-md-12 sanctuary-list')
                 div(
-                    class='col-md-6'
+                    class='col-md-4 sanctuary'
                     ng-repeat='sanctuary in sanctuaryList'
                 )
+                    p
+                        label 避難所名稱:
+                        input(ng-model='sanctuary.name')
+                    p
+                        label 避難所住址:
+                        input(ng-model='sanctuary.address')
+                    p
+                        label 避難所電話:
+                        input(ng-model='sanctuary.phoneNumber')
+                    p
+                        label 避難所容納人數:
+                        input(ng-model='sanctuary.accommodation')
+                div(
+                    class='col-md-4 click-button add-sanctuary'
+                    ng-click='appendSanctuaryList()'
+                )
+                    增加避難所
+
+            div(class='col-xs-12 col-sm-12 col-md-12 button-list')
+                div(
+                    class='col-sm-12 col-md-6 click-button update-sanctuary'
+                    ng-click='updateSanctuaryList()'
+                )
+                    更新資料
+                div(
+                    class='col-sm-12 col-md-6 click-button delete-sanctuary'
+                    ng-click='deleteSanctuaryList()'
+                )
+                    刪除資料

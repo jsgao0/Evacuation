@@ -3,3 +3,50 @@
     width: 100%;
     max-width: 970px;
 }
+
+.evacuation-info, .sanctuary-list, .button-list {
+    border: 2px solid gray;
+    margin: 10px 0;
+}
+
+.sanctuary-list > div:nth-child(even) {
+    background: #f7f7f9;
+}
+
+.sanctuary {
+    padding: 10px;
+}
+
+.click-button {
+    background: gray;
+    color: white;
+    padding: 76px;
+    text-align: center;
+}
+
+.click-button.update-sanctuary {
+    background: #84DCC6;
+    content:"";
+}
+
+.click-button.delete-sanctuary {
+    background: #FF686B;
+    content:"";
+}
+
+.click-button:hover {
+    cursor: pointer;
+    opacity: .7;
+}
+
+.click-button.add-sanctuary:hover:before {
+    content:"＋";
+}
+
+.click-button.update-sanctuary:hover {
+    content:"";
+}
+
+.click-button.delete-sanctuary:hover {
+    content:"";
+}

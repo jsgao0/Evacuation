@@ -51,9 +51,10 @@ uploadApp.service('dataService', function ($http) {
             url: 'https://evacuation.herokuapp.com/' + townId + '/' + villageId + '/sanctuaries?callback=JSON_CALLBACK'
         }).then(function (result) {
             try {
-                evacuationInfo = JSON.parse(result.data);
+                evacuationInfo = result.data;
+                if(!evacuationInfo) evacuationInfo = angular.copy(self.template);
             } catch(Exception) {
-                evacuationInfo = {};
+                evacuationInfo = angular.copy(self.template);
             }
             callback(evacuationInfo);
         }, function (response) {
@@ -62,6 +63,46 @@ uploadApp.service('dataService', function ($http) {
             // or server returns response with an error status.
         });
     };
+    self.template = {
+        "location": {
+            "county": "宜蘭縣",
+            "town": "宜蘭市",
+            "village": "慈安里"
+        },
+        "responseCenter": {
+            "name": "宜蘭市災害應變中心",
+            "phoneNumber": "03-9325164"
+        },
+        "villageHead": {
+            "name": "周阿通",
+            "phoneNumber": "03-9382805",
+            "cellphoneNumber": "0935-207743"
+        },
+        "policeStation": {
+            "name": "新民派出所",
+            "phoneNumber": "03-9323108"
+        },
+        "fireBrigade": {
+            "name": "宜蘭消防分隊",
+            "phoneNumber": "03-9322225"
+        },
+        "evacuatedDirection": {
+            "sanctuaries": [
+                {
+                    "name": "東園社區活動中心",
+                    "accommodation": 200,
+                    "address": "宜蘭市崇聖街192號",
+                    "phoneNumber": "03-9367270"
+                },
+                {
+                    "name": "國立宜蘭高商（體育館）",
+                    "accommodation": 600,
+                    "address": "宜蘭市延平路 50 號",
+                    "phoneNumber": "03-9384147"
+                }
+            ]
+        }
+    };
 });
 
 
@@ -69,10 +110,13 @@ uploadApp.controller('selectorController', function ($scope, dataService) {
   $scope.countyList = [];
   $scope.townList = [];
   $scope.villageList = [];
+  $scope.evacuationInfo = {};
   $scope.sanctuaryList = [];
   dataService.renderCountyList(function(countyList) {
       $scope.countyList = countyList;
       $scope.selectedCounty = $scope.countyList[0];
+      $scope.evacuationInfo = {};
+      $scope.sanctuaryList = [];
       $scope.renderTownListByCountyId();
   });
   $scope.renderTownListByCountyId = function() {
@@ -80,6 +124,8 @@ uploadApp.controller('selectorController', function ($scope, dataService) {
       dataService.renderTownListByCountyId(countyId, function(townList) {
           $scope.townList = townList;
           $scope.selectedTown = $scope.townList[0];
+          $scope.evacuationInfo = {};
+          $scope.sanctuaryList = [];
           $scope.renderVillageListByTownId();
       });
   };
@@ -88,14 +134,27 @@ uploadApp.controller('selectorController', function ($scope, dataService) {
       dataService.renderVillageListByTownId(townId, function(villageList) {
           $scope.villageList = villageList;
           $scope.selectedVillage = $scope.villageList[0];
+          $scope.evacuationInfo = {};
+          $scope.sanctuaryList = [];
           $scope.renderEvacuationInfoByTownIdAndVillageId();
       });
   };
   $scope.renderEvacuationInfoByTownIdAndVillageId = function() {
       var townId = $scope.selectedTown.town_id;
-      var villageId = $scope.selectedTown.villageId;
+      var villageId = $scope.selectedVillage.village_id;
       dataService.renderEvacuationInfoByTownIdAndVillageId(townId, villageId, function(evacuationInfo) {
-          $scope.sanctuaryList = evacuationInfo.evacuatedDirection.sanctuaries;
+          $scope.evacuationInfo = evacuationInfo;
+          $scope.sanctuaryList = $scope.evacuationInfo.evacuatedDirection.sanctuaries;
       });
+  };
+  $scope.appendSanctuaryList = function() {
+      console.log(angular.copy($scope.evacuationInfo));
+  };
+  $scope.updateSanctuaryList = function() {
+    angular.copy($scope.evacuationInfo); // return value;
+  };
+  $scope.deleteSanctuaryList = function() {
+      alert('還沒實作喔～');
+      //TODO
   };
 });
