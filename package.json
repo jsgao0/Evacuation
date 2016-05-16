@@ -1,0 +1,34 @@
+{
+  "name": "evacuation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.13.4",
+    "jade": "^1.11.0",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js",
+    "test": "mocha"
+  },
+  "engines": {
+    "node": "0.12.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.heroku.com/evacuation-web.git"
+  },
+  "keywords": [
+    "evacuation",
+    "earthquake",
+    "disaster"
+  ],
+  "author": "jsgao0",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jsgao0/Evacuation/issues"
+  },
+  "homepage": "https://github.com/jsgao0/Evacuation"
+}
