@@ -17,6 +17,7 @@ router.get('/', function(req, res, next) {
 
 });
 
+app.set('port', (process.env.PORT || 5000));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -24,6 +25,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', router);
 
-app.listen(9999, function () {
+app.listen(app.get('port'), function () {
   console.log('Ready');
 });
