@@ -1,5 +1,5 @@
-fs = require('fs');
-fs.readFile('./source/village-list.csv', 'utf8', function (err,data) {
+var fs = require('fs');
+fs.readFile('../source/village-list.csv', 'utf8', function (err,data) {
   if (err) {
     return console.log(err);
   }
@@ -22,9 +22,11 @@ fs.readFile('./source/village-list.csv', 'utf8', function (err,data) {
       village[keys[8]] = record[8];
       village[keys[9]] = record[9];
       village[keys[10]] = record[10];
-      villageList.push(village);
+      if(!!village.OBJECTID_1) villageList.push(village);
   });
-  var stream = fs.createWriteStream("villageList.json");
+
+  console.log(villageList);
+  var stream = fs.createWriteStream("../data/villageList.json");
   stream.once('open', function(fd) {
     stream.write(JSON.stringify(villageList));
     stream.end();
