@@ -1,0 +1,31 @@
+extends layout
+
+block title
+    script(src='/script/controller.js')
+
+block content
+    h1= title
+    p= desc
+    div
+        div(ng-controller='selectorController')
+            div(class='col-md-3')
+                select(
+                    class='col-md-12'
+                    ng-model='selectedCounty'
+                    ng-options='county as county.county for county in countyList track by county.county_id'
+                    ng-change='renderTownListByCountyId()'
+                )
+            div(class='col-md-3')
+                select(
+                    class='col-md-12'
+                    ng-model='selectedTown'
+                    ng-options='town as town.town for town in townList track by town.town_id'
+                    ng-change='renderVillageListByCountyIdAndTownId()'
+                )
+            div(class='col-md-3')
+                select(
+                    class='col-md-12'
+                    ng-model='selectedVillage'
+                    ng-options='village as village.village for village in villageList track by village.village_id'
+                )
+            div(class='col-md-3') 4
