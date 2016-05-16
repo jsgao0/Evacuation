@@ -18,19 +18,19 @@
 }
 
 .click-button {
-    background: gray;
+    background: gray !important;
     color: white;
     padding: 76px;
     text-align: center;
 }
 
 .click-button.update-sanctuary {
-    background: #84DCC6;
+    background: #84DCC6 !important;
     content:"";
 }
 
 .click-button.delete-sanctuary {
-    background: #FF686B;
+    background: #FF686B !important;
     content:"";
 }
 

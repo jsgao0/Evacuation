@@ -51,7 +51,7 @@ uploadApp.service('dataService', function ($http) {
             url: 'https://evacuation.herokuapp.com/' + townId + '/' + villageId + '/sanctuaries?callback=JSON_CALLBACK'
         }).then(function (result) {
             try {
-                evacuationInfo = result.data;
+                evacuationInfo = JSON.parse(result.data.evacuationInfo.sanctuaries || {});
                 if(!evacuationInfo) evacuationInfo = angular.copy(self.template);
             } catch(Exception) {
                 evacuationInfo = angular.copy(self.template);
@@ -63,42 +63,50 @@ uploadApp.service('dataService', function ($http) {
             // or server returns response with an error status.
         });
     };
+    self.updateEvacuationInfoByTownIdAndVillageId = function(townId, villageId, body, callback) {
+        var evacuationInfo = {};
+        $http({
+            method: 'PUT',
+            url: 'https://evacuation.herokuapp.com/' + townId + '/' + villageId + '/sanctuaries',
+            data: body
+        }).then(function (result) {
+            callback(result);
+        }, function (response) {
+            console.log(response);
+            // called asynchronously if an error occurs
+            // or server returns response with an error status.
+        });
+    };
     self.template = {
         "location": {
-            "county": "宜蘭縣",
-            "town": "宜蘭市",
-            "village": "慈安里"
+            "county": "",
+            "town": "",
+            "village": ""
         },
         "responseCenter": {
-            "name": "宜蘭市災害應變中心",
-            "phoneNumber": "03-9325164"
+            "name": "",
+            "phoneNumber": ""
         },
         "villageHead": {
-            "name": "周阿通",
-            "phoneNumber": "03-9382805",
-            "cellphoneNumber": "0935-207743"
+            "name": "",
+            "phoneNumber": "",
+            "cellphoneNumber": ""
         },
         "policeStation": {
-            "name": "新民派出所",
-            "phoneNumber": "03-9323108"
+            "name": "",
+            "phoneNumber": ""
         },
         "fireBrigade": {
-            "name": "宜蘭消防分隊",
-            "phoneNumber": "03-9322225"
+            "name": "",
+            "phoneNumber": ""
         },
         "evacuatedDirection": {
             "sanctuaries": [
                 {
-                    "name": "東園社區活動中心",
-                    "accommodation": 200,
-                    "address": "宜蘭市崇聖街192號",
-                    "phoneNumber": "03-9367270"
-                },
-                {
-                    "name": "國立宜蘭高商（體育館）",
-                    "accommodation": 600,
-                    "address": "宜蘭市延平路 50 號",
-                    "phoneNumber": "03-9384147"
+                    "name": "",
+                    "accommodation": 0,
+                    "address": "",
+                    "phoneNumber": ""
                 }
             ]
         }
@@ -148,10 +156,24 @@ uploadApp.controller('selectorController', function ($scope, dataService) {
       });
   };
   $scope.appendSanctuaryList = function() {
-      console.log(angular.copy($scope.evacuationInfo));
+      $scope.sanctuaryList.push(
+          {
+              "name": "",
+              "accommodation": 0,
+              "address": "",
+              "phoneNumber": ""
+          }
+      );
+    //   console.log(angular.copy($scope.evacuationInfo));
   };
   $scope.updateSanctuaryList = function() {
-    angular.copy($scope.evacuationInfo); // return value;
+      var townId = $scope.selectedTown.town_id;
+      var villageId = $scope.selectedVillage.village_id;
+      var body = angular.copy($scope.evacuationInfo);
+      dataService.updateEvacuationInfoByTownIdAndVillageId(townId, villageId, body, function(result) {
+          console.log(result);
+      });
+    // angular.copy($scope.evacuationInfo); // return value;
   };
   $scope.deleteSanctuaryList = function() {
       alert('還沒實作喔～');
