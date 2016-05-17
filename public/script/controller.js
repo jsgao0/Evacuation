@@ -51,10 +51,12 @@ uploadApp.service('dataService', function ($http) {
             url: 'https://evacuation.herokuapp.com/' + townId + '/' + villageId + '/sanctuaries?callback=JSON_CALLBACK'
         }).then(function (result) {
             try {
-                evacuationInfo = JSON.parse(result.data.evacuationInfo || {});
+                evacuationInfo = result.data.evacuationInfo || {};
                 if(!evacuationInfo) evacuationInfo = angular.copy(self.template);
+                console.log('ok');
             } catch(Exception) {
                 evacuationInfo = angular.copy(self.template);
+                console.log(Exception);
             }
             callback(evacuationInfo);
         }, function (response) {
@@ -165,7 +167,6 @@ uploadApp.controller('selectorController', function ($scope, dataService) {
               "phoneNumber": ""
           }
       );
-    //   console.log(angular.copy($scope.evacuationInfo));
   };
   $scope.updateSanctuaryList = function() {
       var townId = $scope.selectedTown.town_id;

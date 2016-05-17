@@ -70,3 +70,18 @@ footer {
 .click-button.delete-sanctuary:hover {
     content:"";
 }
+
+[class^=avatar] {
+    background-color: #FFF;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.avatar-male {
+    background-image: url("/icon/male.png");
+}
+
+.avatar-female {
+    background-image: url("/icon/female.png");
+}

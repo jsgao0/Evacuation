@@ -33,7 +33,8 @@ router.put('/:TOWN_ID/:VILLAGE_ID/sanctuaries', function(req, res, next) {
     });
 });
 
-app.set('port', (process.env.PORT || 5000));
+// app.set('port', (process.env.PORT || 5000));
+app.set('port', (10000));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
