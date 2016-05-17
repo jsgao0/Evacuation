@@ -51,7 +51,7 @@ uploadApp.service('dataService', function ($http) {
             url: 'https://evacuation.herokuapp.com/' + townId + '/' + villageId + '/sanctuaries?callback=JSON_CALLBACK'
         }).then(function (result) {
             try {
-                evacuationInfo = JSON.parse(result.data.evacuationInfo.sanctuaries || {});
+                evacuationInfo = JSON.parse(result.data.evacuationInfo || {});
                 if(!evacuationInfo) evacuationInfo = angular.copy(self.template);
             } catch(Exception) {
                 evacuationInfo = angular.copy(self.template);
