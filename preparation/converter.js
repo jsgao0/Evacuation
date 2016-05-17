@@ -2,6 +2,43 @@ var fs = require('fs');
 
 var Converter = function() {};
 
+Converter.prototype.villageHeadJSONArrange = function() {
+    fs.readFile('../source/village-head.json', 'utf8', function (err,data) {
+      if (err) {
+        return console.log(err);
+      }
+      var villageHeadListRaw = JSON.parse(data);
+
+      var villageHeadElection = {
+          year: 103,
+          villageHeadList: []
+      };
+      [].forEach.call(villageHeadListRaw, function(villageHeadRaw) {
+          var villageHead = {
+              county: villageHeadRaw.cityname || '',
+              town: villageHeadRaw.townname || '',
+              village: villageHeadRaw.villname || '',
+              name: villageHeadRaw.idname || '',
+              gender: villageHeadRaw.sex || '',
+              party: villageHeadRaw.partymship || '',
+              education: villageHeadRaw.education || '',
+              profilo: villageHeadRaw.profession || '',
+              avatar: villageHeadRaw.photograph || '',
+              office: {
+                  address: villageHeadRaw.officeadress || '',
+                  phoneNumber: villageHeadRaw.officetelphone || ''
+              }
+          };
+          villageHeadElection.villageHeadList.push(villageHead);
+      });
+      var stream = fs.createWriteStream("../data/villageHeadList.json");
+      stream.once('open', function(fd) {
+        stream.write(JSON.stringify(villageHeadElection));
+        stream.end();
+      });
+    });
+};
+
 Converter.prototype.villagePopulationCSV2JSON = function() {
     fs.readFile('../source/village-population-104-12.csv', 'utf8', function (err,data) {
       if (err) {
