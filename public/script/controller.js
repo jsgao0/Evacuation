@@ -51,8 +51,10 @@ uploadApp.service('dataService', function ($http) {
             url: 'https://evacuation.herokuapp.com/' + townId + '/' + villageId + '/sanctuaries?callback=JSON_CALLBACK'
         }).then(function (result) {
             try {
-                evacuationInfo = result.data.evacuationInfo || {};
+                evacuationInfo = result.data.evacuationInfo;
                 if(!evacuationInfo) evacuationInfo = angular.copy(self.template);
+                if(typeof evacuationInfo === 'string')
+                    evacuationInfo = JSON.parse(evacuationInfo);
                 console.log('ok');
             } catch(Exception) {
                 evacuationInfo = angular.copy(self.template);
@@ -153,7 +155,6 @@ uploadApp.controller('selectorController', function ($scope, dataService) {
       var townId = $scope.selectedTown.town_id;
       var villageId = $scope.selectedVillage.village_id;
       dataService.renderEvacuationInfoByTownIdAndVillageId(townId, villageId, function(evacuationInfo) {
-          console.log(evacuationInfo);
           $scope.evacuationInfo = evacuationInfo;
           $scope.sanctuaryList = $scope.evacuationInfo.evacuatedDirection.sanctuaries;
       });
