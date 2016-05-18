@@ -90,13 +90,18 @@ Converter.prototype.villageFitShelters = function(shelterListRaw, callback) {
     fs.readFile(__dirname + '/../public/data/villageList.json', 'utf8', function (err,data) {
         var villageListRaw = JSON.parse(data);
             villageList = [];
-        [].forEach.call(villageListRaw, function(village) {
+        [].forEach.call(villageListRaw, function(villageRaw) {
+            var village = {
+                county: villageRaw.COUNTY,
+                town: villageRaw.TOWN,
+                village: villageRaw.VILLAGE
+            };
             [].forEach.call(shelterListRaw, function(shelter) {
-                var villageName = village.VILLAGE.substring(0, 2);
+                var villageName = village.village.substring(0, 2);
                 if(!village.defaultShelterList) village.defaultShelterList = [];
                 if( // 明確配對到村里，則屬village。
-                    shelter.county.indexOf(village.COUNTY) > -1 &&
-                    shelter.town.indexOf(village.TOWN) > -1 &&
+                    shelter.county.indexOf(village.county) > -1 &&
+                    shelter.town.indexOf(village.town) > -1 &&
                     shelter.defaultville.indexOf(villageName) > -1
                 ) {
                     village.defaultShelterList.push({
@@ -114,8 +119,8 @@ Converter.prototype.villageFitShelters = function(shelterListRaw, callback) {
                         adaptWeaker: shelter.adaptForWeaker
                     });
                 } else if( // 未配對到，則屬town。
-                    shelter.county.indexOf(village.COUNTY) > -1 &&
-                    shelter.town.indexOf(village.TOWN) > -1
+                    shelter.county.indexOf(village.county) > -1 &&
+                    shelter.town.indexOf(village.town) > -1
                 ) {
                     village.defaultShelterList.push({
                         id: shelter.shelterId,
