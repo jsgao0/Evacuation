@@ -28,12 +28,4 @@ Caller.prototype.updateSanctuaryList = function(townId, villageId, body, callbac
     req.end();
 };
 
-Caller.prototype.getCategoryList = function(callback) {
-  this.options.path = '/categorys';
-  http.request(this.options, function(res) {
-    callback(res);
-  }).end();
-};
-
-
 module.exports = Caller;

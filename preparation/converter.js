@@ -1,9 +1,157 @@
-var fs = require('fs');
+var fs = require('fs'),
+    xml2js = require('xml2js');
 
-var Converter = function() {};
+var Converter = function() {
+    this.parseXML2JSON = function(sourcePath, callback) {
+        var parser = new xml2js.Parser();
+        fs.readFile(sourcePath, function(err, data) {
+            parser.parseString(data);
+        });
+        parser.addListener('end', function(result) {
+            callback(result);
+        });
+    };
+};
+
+// Not complete yet.
+Converter.prototype.villageShelterRawArrange = function(shelterList) {
+    var notCatchedShelterList = [];
+    var exceptionAmountList = [].reduce.call(shelterList, function(amount, shelter) {
+        if(shelter.defaultville.length > 3) amount.expectTotal += 1;
+        if(
+            shelter.defaultville.indexOf(',') > -1 ||
+            shelter.defaultville.indexOf('，') > -1
+        ) {amount.comma += 1; amount.actualTotal += 1;}
+        else if(shelter.defaultville.indexOf('。') > -1) {amount.fullStop += 1; amount.actualTotal += 1;}
+        else if(shelter.defaultville.indexOf(' ') > -1) {amount.space += 1; amount.actualTotal += 1;}
+        else if(shelter.defaultville.indexOf('　') > -1) {amount.tab += 1; amount.actualTotal += 1;}
+        else if(shelter.defaultville.indexOf('.') > -1) {amount.dot += 1; amount.actualTotal += 1;}
+        else if(shelter.defaultville.indexOf('、') > -1) {amount.scomma += 1; amount.actualTotal += 1;}
+        else if(shelter.defaultville.indexOf('/') > -1) {amount.slash += 1; amount.actualTotal += 1;}
+        else if(shelter.defaultville.indexOf('等') > -1) {amount.etc += 1; amount.actualTotal += 1;}
+        else if(shelter.defaultville.indexOf('鄉') === 2) {amount.vil += 1; amount.actualTotal += 1;}
+        // else if(shelter.defaultville.indexOf('鄰') > shelter.defaultville.length - 1) {amount.nb += 1; amount.actualTotal += 1;}
+        else if(
+            shelter.defaultville.indexOf('全區') > -1 ||
+            shelter.defaultville.indexOf('不分里') > -1 ||
+            shelter.defaultville.indexOf('各里') > -1
+        ) {amount.forAll += 1; amount.actualTotal += 1;}
+        else if(shelter.defaultville.length > 3) {notCatchedShelterList.push(shelter.defaultville);}
+        amount.diff = amount.expectTotal - amount.actualTotal;
+        return amount;
+    }, {
+        none: 0,
+        comma:0,
+        fullStop: 0,
+        space:0,
+        tab: 0,
+        dot:0,
+        scomma: 0,
+        slash: 0,
+        etc: 0,
+        vil: 0,
+        forAll: 0,
+        nb: 0, //Neighborhood
+        actualTotal: 0,
+        expectTotal: 0,
+        diff: 0
+    });
+    console.log(notCatchedShelterList);
+    console.log(exceptionAmountList);
+};
+
+Converter.prototype.villageFitShelters = function(shelterListRaw, callback) {
+    /**
+        villageShelterListRaw = [
+            {
+                "adaptForWeaker":"是",
+                "address":"彰化縣北斗鎮斗中路712號",
+                "county":"彰化縣",
+                "defaultville":"東光里、七星里",
+                "disastertype":"水災,震災",
+                "isIndoor":"是",
+                "isOutdoor":"否",
+                "lat":"23.871139",
+                "lon":"120.534312",
+                "name":"螺青國小",
+                "openstatus":"撤除",
+                "peopleno":"440",
+                "refugedno":"",
+                "shelterCode":"SN521-0003",
+                "shelterId":"1",
+                "town":"北斗鎮",
+                "twd97x":"202572.75",
+                "twd97y":"2640828.38626",
+                "village":"東光里"
+            }
+        ]
+     */
+
+    fs.readFile(__dirname + '/../public/data/villageList.json', 'utf8', function (err,data) {
+        var villageListRaw = JSON.parse(data);
+            villageList = [];
+        [].forEach.call(villageListRaw, function(village) {
+            [].forEach.call(shelterListRaw, function(shelter) {
+                var villageName = village.VILLAGE.substring(0, 2);
+                if(!village.defaultVillageList) village.defaultVillageList = [];
+                if(
+                    shelter.county.indexOf(village.COUNTY) > -1 &&
+                    shelter.town.indexOf(village.TOWN) > -1 &&
+                    shelter.defaultville.indexOf(villageName) > -1
+                ) {
+                    village.defaultVillageList.push({
+                        id: shelter.shelterId,
+                        code: shelter.shelterCode,
+                        name: shelter.name,
+                        address: shelter.address,
+                        accommodation: shelter.peopleno || 0,
+                        lat: shelter.lat,
+                        lon: shelter.lon,
+                        openStatus: shelter.openstatus,
+                        disasterType: shelter.disastertype,
+                        isIndoor: shelter.shelter,
+                        isOutdoor: shelter.isOutdoor,
+                        adaptWeaker: shelter.adaptForWeaker
+                    });
+                }
+            });
+            villageList.push(village);
+        });
+        callback(villageList);
+    });
+};
+
+Converter.prototype.villageShelterXML2JSON = function(callback) {
+    var self = this;
+    self.parseXML2JSON(__dirname + '/../public/source/village-shelter-list.xml', function(result) {
+        var villageShelterListRaw = result.EEAResp.SheltersInfoList[0].shelterInfo.map(function(shelterRaw) {
+            return shelterRaw.$;
+        });
+
+        self.villageFitShelters(villageShelterListRaw, function(villageList) {
+            var emptyShelterVillageAmount = [].reduce.call(villageList, function(count, village) {
+                if(village.defaultVillageList.length === 0) {
+                    // console.log(village.COUNTY + ' ' + village.TOWN + ' ' + village.VILLAGE);
+                    count += 1;
+                }
+                return count;
+            }, 0);
+            console.log(emptyShelterVillageAmount + '/' + villageList.length);
+
+
+            var stream = fs.createWriteStream(__dirname + '/../public/data/villageFitShelterList.json');
+            stream.once('open', function(fd) {
+              stream.write(JSON.stringify(villageList));
+              stream.end();
+              console.log('Convert shelter list XML to JSON successfully.');
+            });
+        });
+
+    });
+};
 
 Converter.prototype.villageHeadJSONArrange = function() {
-    fs.readFile('../public/source/village-head.json', 'utf8', function (err,data) {
+    fs.readFile(__dirname + '/../public/source/village-head.json', 'utf8', function (err,data) {
       if (err) {
         return console.log(err);
       }
@@ -31,7 +179,7 @@ Converter.prototype.villageHeadJSONArrange = function() {
           };
           villageHeadElection.villageHeadList.push(villageHead);
       });
-      var stream = fs.createWriteStream("../data/villageHeadList.json");
+      var stream = fs.createWriteStream(__dirname + '/../public/data/villageHeadList.json');
       stream.once('open', function(fd) {
         stream.write(JSON.stringify(villageHeadElection));
         stream.end();
@@ -40,7 +188,7 @@ Converter.prototype.villageHeadJSONArrange = function() {
 };
 
 Converter.prototype.villagePopulationCSV2JSON = function() {
-    fs.readFile('./public/source/village-population-104-12.csv', 'utf8', function (err,data) {
+    fs.readFile(__dirname + '/../public/source/village-population-104-12.csv', 'utf8', function (err,data) {
         if (err) {
             return console.log(err);
         }
@@ -71,7 +219,7 @@ Converter.prototype.villagePopulationCSV2JSON = function() {
             console.log(village);
             villagePopulation.villagePopulationList.push(village);
         });
-        var stream = fs.createWriteStream("./public/data/villagePopulation.json");
+        var stream = fs.createWriteStream(__dirname + '/../public/data/villagePopulation.json');
         stream.once('open', function(fd) {
             stream.write(JSON.stringify(villagePopulation));
             stream.end();
@@ -79,8 +227,10 @@ Converter.prototype.villagePopulationCSV2JSON = function() {
     });
 };
 
+// Need to be refactored.
+// And you should modify importVillageList POST method evacuationRESTful app.
 Converter.prototype.villageDataCSV2JSON = function() {
-    fs.readFile('../public/source/village-list.csv', 'utf8', function (err,data) {
+    fs.readFile(__dirname + '/../public/source/village-list.csv', 'utf8', function (err,data) {
       if (err) {
         return console.log(err);
       }
@@ -105,7 +255,7 @@ Converter.prototype.villageDataCSV2JSON = function() {
           village[keys[10]] = record[10];
           if(!!village.OBJECTID_1) villageList.push(village);
       });
-      var stream = fs.createWriteStream("../data/villageList.json");
+      var stream = fs.createWriteStream(__dirname + '/../public/villageList.json');
       stream.once('open', function(fd) {
         stream.write(JSON.stringify(villageList));
         stream.end();
