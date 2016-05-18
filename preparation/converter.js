@@ -3,7 +3,7 @@ var fs = require('fs');
 var Converter = function() {};
 
 Converter.prototype.villageHeadJSONArrange = function() {
-    fs.readFile('../source/village-head.json', 'utf8', function (err,data) {
+    fs.readFile('../public/source/village-head.json', 'utf8', function (err,data) {
       if (err) {
         return console.log(err);
       }
@@ -40,39 +40,47 @@ Converter.prototype.villageHeadJSONArrange = function() {
 };
 
 Converter.prototype.villagePopulationCSV2JSON = function() {
-    fs.readFile('../source/village-population-104-12.csv', 'utf8', function (err,data) {
-      if (err) {
-        return console.log(err);
-      }
-      var rows = data.split('\n');
-      var keys = rows[0].split(',');
-      rows.splice(0,2); // Remove the Englisth and Chinese keys.
+    fs.readFile('./public/source/village-population-104-12.csv', 'utf8', function (err,data) {
+        if (err) {
+            return console.log(err);
+        }
+        var rows = data.split('\n');
+        var keys = rows[0].split(',');
+        rows.splice(0,2); // Remove the Englisth and Chinese keys.
 
-      var villageList = [];
-      [].forEach.call(rows, function(row) {
-          var village = {},
-              record = row.split(',');
+        var year = rows[0].split(',')[0].substring(0,3);
+        var month = rows[0].split(',')[0].substring(3,6);
 
-          if(!record[1]) return;
+        var villagePopulation = {
+            year: year,
+            month: month,
+            villagePopulationList: []
+        };
 
-          village.county = record[1].substring(0, 3);
-          village.town = record[1].substring(3).replace(" ", "");
-          village.village = record[2];
-          village.householdAmount = record[3];
-          village.population = record[4];
-          console.log(village);
-          villageList.push(village);
-      });
-      var stream = fs.createWriteStream("../data/villagePopulation.json");
-      stream.once('open', function(fd) {
-        stream.write(JSON.stringify(villageList));
-        stream.end();
-      });
+        [].forEach.call(rows, function(row) {
+            var village = {},
+            record = row.split(',');
+
+            if(!record[1]) return;
+
+            village.county = record[1].substring(0, 3);
+            village.town = record[1].substring(3).replace(" ", "");
+            village.village = record[2];
+            village.householdAmount = record[3];
+            village.population = record[4];
+            console.log(village);
+            villagePopulation.villagePopulationList.push(village);
+        });
+        var stream = fs.createWriteStream("./public/data/villagePopulation.json");
+        stream.once('open', function(fd) {
+            stream.write(JSON.stringify(villagePopulation));
+            stream.end();
+        });
     });
 };
 
 Converter.prototype.villageDataCSV2JSON = function() {
-    fs.readFile('../source/village-list.csv', 'utf8', function (err,data) {
+    fs.readFile('../public/source/village-list.csv', 'utf8', function (err,data) {
       if (err) {
         return console.log(err);
       }
