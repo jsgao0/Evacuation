@@ -144,7 +144,7 @@ Converter.prototype.villageFitShelters = function(shelterListRaw, callback) {
     });
 };
 
-Converter.prototype.villageShelterXML2JSON = function(callback) {
+Converter.prototype.villageShelterXML2JSON = function() {
     var self = this;
     self.parseXML2JSON(__dirname + '/../public/source/village-shelter-list.xml', function(result) {
         var villageShelterListRaw = result.EEAResp.SheltersInfoList[0].shelterInfo.map(function(shelterRaw) {
