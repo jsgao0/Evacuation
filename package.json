@@ -12,7 +12,8 @@
   "devDependencies": {},
   "scripts": {
     "start": "node index.js",
-    "test": "mocha"
+    "test": "mocha",
+    "convert": "node ./preparation/index.js"
   },
   "engines": {
     "node": "0.12.2"
