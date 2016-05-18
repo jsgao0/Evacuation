@@ -93,13 +93,31 @@ Converter.prototype.villageFitShelters = function(shelterListRaw, callback) {
         [].forEach.call(villageListRaw, function(village) {
             [].forEach.call(shelterListRaw, function(shelter) {
                 var villageName = village.VILLAGE.substring(0, 2);
-                if(!village.defaultVillageList) village.defaultVillageList = [];
-                if(
+                if(!village.defaultShelterList) village.defaultShelterList = [];
+                if( // 明確配對到村里，則屬village。
                     shelter.county.indexOf(village.COUNTY) > -1 &&
                     shelter.town.indexOf(village.TOWN) > -1 &&
                     shelter.defaultville.indexOf(villageName) > -1
                 ) {
-                    village.defaultVillageList.push({
+                    village.defaultShelterList.push({
+                        id: shelter.shelterId,
+                        code: shelter.shelterCode,
+                        name: shelter.name,
+                        address: shelter.address,
+                        accommodation: shelter.peopleno || 0,
+                        lat: shelter.lat,
+                        lon: shelter.lon,
+                        openStatus: shelter.openstatus,
+                        disasterType: shelter.disastertype,
+                        isIndoor: shelter.shelter,
+                        isOutdoor: shelter.isOutdoor,
+                        adaptWeaker: shelter.adaptForWeaker
+                    });
+                } else if( // 未配對到，則屬town。
+                    shelter.county.indexOf(village.COUNTY) > -1 &&
+                    shelter.town.indexOf(village.TOWN) > -1
+                ) {
+                    village.defaultShelterList.push({
                         id: shelter.shelterId,
                         code: shelter.shelterCode,
                         name: shelter.name,
@@ -130,7 +148,7 @@ Converter.prototype.villageShelterXML2JSON = function(callback) {
 
         self.villageFitShelters(villageShelterListRaw, function(villageList) {
             var emptyShelterVillageAmount = [].reduce.call(villageList, function(count, village) {
-                if(village.defaultVillageList.length === 0) {
+                if(village.defaultShelterList.length > 0) {
                     // console.log(village.COUNTY + ' ' + village.TOWN + ' ' + village.VILLAGE);
                     count += 1;
                 }
