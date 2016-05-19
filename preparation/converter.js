@@ -202,7 +202,7 @@ Converter.prototype.villageHeadJSONArrange = function() {
           };
           villageHeadElection.villageHeadList.push(villageHead);
       });
-      var stream = fs.createWriteStream(__dirname + '/../public/data/villageHeadList.json');
+      var stream = fs.createWriteStream(__dirname + '/../public/data/villageHead.json');
       stream.once('open', function(fd) {
         stream.write(JSON.stringify(villageHeadElection));
         stream.end();
