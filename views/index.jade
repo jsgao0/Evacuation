@@ -80,11 +80,14 @@ block content
             div(class='col-xs-12 col-sm-12 col-md-12')
                 h2
                     p(class='col-md-12') 避難所資訊
-                h3(ng-class='{true: "shelter-enough", false: "shelter-not-enougn"}[shelterInfo.isEnougn]')
-                    p(class='col-md-2')(
+                h3
+                    p(
+                        class='col-md-2'
                         ng-bind='shelterInfo.currentStatus'
+                        ng-class='{true: "shelter-enough", false: "shelter-not-enougn"}[shelterInfo.isEnougn]'
                     )
-                    p(class='col-md-4')(
+                    p(
+                        class='col-md-4'
                         ng-bind='shelterInfo.currentStatusAppend'
                     )
 

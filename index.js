@@ -11,16 +11,6 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 router.get('/', function(req, res, next) {
-    // fs.readFile('./data/villageList.json', 'utf8', function (err,data) {
-    //   if (err) {
-    //     return console.log(err);
-    //   }
-    //   res.render('index', {
-    //       'title': '疏散避難圖資上傳',
-    //       'desc': '將內政部消防署提供之簡易疏散避難圖中的資料，填寫到下表中，並且送出，將即時更新疏散資料。'
-    //   });
-    // });
-
     res.render('index', {
         'title': '疏散避難所圖資',
         'desc': '目前已匯入資料：各村里(7855)、各村里長(7243)、各村里人口數(7074)、各村里避難所清單(7365)。'

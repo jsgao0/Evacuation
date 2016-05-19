@@ -1,5 +1,17 @@
 var uploadApp = angular.module('uploadApp', []);
 
+uploadApp.service('polyfillService', function() {
+    if (typeof(Number.prototype.toRad) === "undefined") {
+        Number.prototype.toRad = function() {
+            return this * Math.PI / 180;
+        };
+    }
+});
+
+uploadApp.service('evacuationRouteService', function() {
+    // TODO
+});
+
 uploadApp.service('dataService', function ($http) {
     var self = this;
     self.renderCountyList = function (callback) {
@@ -185,7 +197,8 @@ uploadApp.controller('selectorController', function ($scope, $q, dataService) {
           $scope.currentAccommodation = [].reduce.call($scope.shelter.defaultShelterList, function(totalAccommodation, shelter){
               shelter.fullAddress = $scope.selectedCounty.county + $scope.selectedTown.town + $scope.selectedVillage.village + shelter.address;
               try {
-                  totalAccommodation += parseInt(shelter.accommodation);
+                  if(shelter.openStatus !== '開設') totalAccommodation += 0;
+                  else totalAccommodation += parseInt(shelter.accommodation);
               } catch(Exception) {
                   totalAccommodation += 0;
               } finally {
