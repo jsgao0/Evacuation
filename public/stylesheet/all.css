@@ -13,6 +13,10 @@ footer {
     margin: 10px 0;
 }
 
+.sanctuary-list {
+    min-height: 172px;
+}
+
 .sanctuary-list > div:nth-child(even) {
     background: #f7f7f9;
 }
@@ -71,6 +75,11 @@ footer {
     content:"";
 }
 
+.click-button-disable, .click-button-disable:hover {
+    cursor: not-allowed;
+    opacity: .3;
+}
+
 [class^=avatar] {
     background-color: #FFF;
     background-size: contain;
@@ -84,4 +93,12 @@ footer {
 
 .avatar-female {
     background-image: url("/icon/female.png");
+}
+
+.shelter-enough {
+    color: #84DCC6;
+}
+
+.shelter-not-enougn {
+    color: #FF686B;
 }
