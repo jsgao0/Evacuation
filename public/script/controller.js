@@ -6,7 +6,7 @@ uploadApp.service('dataService', function ($http) {
         var countyList = [];
         $http({
             method: 'JSONP',
-            url: 'https://evacuation.herokuapp.com/counties?callback=JSON_CALLBACK'
+            url: 'https://evacuation-restful.herokuapp.com/counties?callback=JSON_CALLBACK'
         }).then(function (result) {
             countyList = result.data.countyList;
             callback(countyList);
@@ -20,7 +20,7 @@ uploadApp.service('dataService', function ($http) {
         var townList = [];
         $http({
             method: 'JSONP',
-            url: 'https://evacuation.herokuapp.com/' + countyId + '/towns?callback=JSON_CALLBACK'
+            url: 'https://evacuation-restful.herokuapp.com/' + countyId + '/towns?callback=JSON_CALLBACK'
         }).then(function (result) {
             townList = result.data.townList;
             callback(townList);
@@ -34,7 +34,7 @@ uploadApp.service('dataService', function ($http) {
         var villageList = [];
         $http({
             method: 'JSONP',
-            url: 'https://evacuation.herokuapp.com/' + townId + '/villages?callback=JSON_CALLBACK'
+            url: 'https://evacuation-restful.herokuapp.com/' + townId + '/villages?callback=JSON_CALLBACK'
         }).then(function (result) {
             villageList = result.data.villageList;
             callback(villageList);
@@ -48,7 +48,7 @@ uploadApp.service('dataService', function ($http) {
         var villageHead = {};
         $http({
             method: 'JSONP',
-            url: 'https://evacuation.herokuapp.com/' + townId + '/' + villageId + '/village-head?callback=JSON_CALLBACK'
+            url: 'https://evacuation-restful.herokuapp.com/' + townId + '/' + villageId + '/village-head?callback=JSON_CALLBACK'
         }).then(function (result) {
             villageHead = result.data.villageHead;
             callback(villageHead);
@@ -62,7 +62,7 @@ uploadApp.service('dataService', function ($http) {
         var villagePopulation = {};
         return $http({
             method: 'JSONP',
-            url: 'https://evacuation.herokuapp.com/' + townId + '/' + villageId + '/population?callback=JSON_CALLBACK'
+            url: 'https://evacuation-restful.herokuapp.com/' + townId + '/' + villageId + '/population?callback=JSON_CALLBACK'
         }).then(function (result) {
             villagePopulation = result.data.villagePopulation;
             callback(villagePopulation);
@@ -76,7 +76,7 @@ uploadApp.service('dataService', function ($http) {
         var villageShelter = {};
         return $http({
             method: 'JSONP',
-            url: 'https://evacuation.herokuapp.com/' + townId + '/' + villageId + '/shelters?callback=JSON_CALLBACK'
+            url: 'https://evacuation-restful.herokuapp.com/' + townId + '/' + villageId + '/shelters?callback=JSON_CALLBACK'
         }).then(function (result) {
             villageShelter = result.data.villageShelter;
             callback(villageShelter);
