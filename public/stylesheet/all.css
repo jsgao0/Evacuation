@@ -95,10 +95,10 @@ footer {
     background-image: url("/icon/female.png");
 }
 
-.shelter-enough {
+.shelter-enough, .shelter-available {
     color: #84DCC6;
 }
 
-.shelter-not-enougn {
+.shelter-not-enougn, .shelter-unavailable {
     color: #FF686B;
 }

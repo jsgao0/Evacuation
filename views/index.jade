@@ -100,7 +100,7 @@ block content
                         ) X
                     p
                         label 避難所名稱:
-                        input(ng-model='shelter.name')
+                        span(ng-bind='shelter.name')
                     p
                         label 避難所住址:
                         span(ng-bind='shelter.fullAddress')
@@ -113,7 +113,10 @@ block content
                         span(ng-bind='shelter.accommodation')
                     p(class='col-md-6')
                         label 開設狀態:
-                        span(ng-bind='shelter.openStatus')
+                        span(
+                            ng-class='{true: "shelter-available", false: "shelter-unavailable"}[shelter.openStatus === "開設"]'
+                            ng-bind='shelter.openStatus'
+                        )
             //
                 div(
                     class='col-md-4 click-button add-sanctuary'

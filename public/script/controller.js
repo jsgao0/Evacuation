@@ -182,7 +182,6 @@ uploadApp.controller('selectorController', function ($scope, $q, dataService) {
       });
       var shelterPromise =  dataService.renderVillageShelterByTownIdAndVillageId(townId, villageId, function(villageShelter) {
           $scope.shelter = villageShelter;
-        //   $scope.shelter.defaultShelterList.sort // TODO
           $scope.currentAccommodation = [].reduce.call($scope.shelter.defaultShelterList, function(totalAccommodation, shelter){
               shelter.fullAddress = $scope.selectedCounty.county + $scope.selectedTown.town + $scope.selectedVillage.village + shelter.address;
               try {
