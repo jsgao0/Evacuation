@@ -36,7 +36,7 @@ Converter.prototype.villageShelterRawArrange = function(shelterList) {
             shelter.defaultville.indexOf('不分里') > -1 ||
             shelter.defaultville.indexOf('各里') > -1
         ) {amount.forAll += 1; amount.actualTotal += 1;}
-        else if(shelter.defaultville.length > 3) {notCatchedShelterList.push(shelter.defaultville);}
+        else if(shelter.defaultville.length >= 3) {notCatchedShelterList.push(shelter.defaultville);}
         amount.diff = amount.expectTotal - amount.actualTotal;
         return amount;
     }, {
@@ -278,10 +278,11 @@ Converter.prototype.villageDataCSV2JSON = function() {
           village[keys[10]] = record[10];
           if(!!village.OBJECTID_1) villageList.push(village);
       });
-      var stream = fs.createWriteStream(__dirname + '/../public/villageList.json');
+      var stream = fs.createWriteStream(__dirname + '/../public/data/villageList.json');
       stream.once('open', function(fd) {
         stream.write(JSON.stringify(villageList));
         stream.end();
+        console.log('Convert village list CSV to JSON successfully.');
       });
     });
 };
