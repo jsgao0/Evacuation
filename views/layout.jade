@@ -2,6 +2,22 @@ doctype html
 html(ng-app='uploadApp')
   head
     title= title
+    meta(
+        name='description'
+        content= desc
+    )
+    meta(
+        name='og:title'
+        content= title
+    )
+    meta(
+        name='og:description'
+        content= desc
+    )
+    meta(
+        name='og:type'
+        content= website
+    )
     link(
         rel='stylesheet',
         href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css',
