@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 router.get('/', function(req, res, next) {
     res.render('index', {
-        'title': '災害預防資訊平台 - Taiwan Alert',
+        'title': '災害預防資訊平台 Taiwan Alert',
         'desc': '災害預防資訊平台，能夠查詢到在你居住地的村里長、避難所資訊。 未來將持續增加災害應變中心、居住地的消防分隊、警察局等資訊，以提供你做防災諮詢。 藉此，達到讓全民防災意識提升的目的。 目前已匯入資料：各村里(完整)、各村里避難所清單(完整)、各村里長(有短缺)、各村里人口數(有短缺)。',
         'status': '目前已匯入資料：各村里(完整)、各村里避難所清單(完整)、各村里長(有短缺)、各村里人口數(有短缺)。'
     });

@@ -11,21 +11,21 @@ block content
             class=''
             ng-controller='selectorController'
         )
-            div(class='col-xs-12 col-sm-12 col-md-4')
+            div(class='col-xs-12 col-sm-12 col-md-4 selector')
                 select(
                     class='col-xs-12 col-sm-12 col-md-12'
                     ng-model='selectedCounty'
                     ng-options='county as county.county for county in countyList track by county.county_id'
                     ng-change='renderTownListByCountyId()'
                 )
-            div(class='col-xs-12 col-sm-12 col-md-4')
+            div(class='col-xs-12 col-sm-12 col-md-4 selector')
                 select(
                     class='col-xs-12 col-sm-12 col-md-12'
                     ng-model='selectedTown'
                     ng-options='town as town.town for town in townList track by town.town_id'
                     ng-change='renderVillageListByTownId()'
                 )
-            div(class='col-xs-12 col-sm-12 col-md-4')
+            div(class='col-xs-12 col-sm-12 col-md-4 selector')
                 select(
                     class='col-xs-12 col-sm-12 col-md-12'
                     ng-model='selectedVillage'
