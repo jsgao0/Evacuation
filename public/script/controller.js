@@ -98,20 +98,6 @@ uploadApp.service('dataService', function ($http) {
             // or server returns response with an error status.
         });
     };
-    self.updateEvacuationInfoByTownIdAndVillageId = function(townId, villageId, body, callback) {
-        var evacuationInfo = {};
-        $http({
-            method: 'PUT',
-            url: '/' + townId + '/' + villageId + '/sanctuaries',
-            data: body
-        }).then(function (result) {
-            callback(result);
-        }, function (response) {
-            console.log(response);
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-        });
-    };
     self.template = {
         "location": {
             "county": "",
@@ -150,102 +136,75 @@ uploadApp.service('dataService', function ($http) {
 
 
 uploadApp.controller('selectorController', function ($scope, $q, dataService) {
-  $scope.countyList = [];
-  $scope.townList = [];
-  $scope.villageList = [];
-  $scope.evacuationInfo = {};
-  $scope.sanctuaryList = [];
-  dataService.renderCountyList(function(countyList) {
-      $scope.countyList = countyList;
-      $scope.selectedCounty = $scope.countyList[0];
-      $scope.evacuationInfo = {};
-      $scope.sanctuaryList = [];
-      $scope.renderTownListByCountyId();
-  });
-  $scope.renderTownListByCountyId = function() {
-      var countyId = $scope.selectedCounty.county_id;
-      dataService.renderTownListByCountyId(countyId, function(townList) {
-          $scope.townList = townList;
-          $scope.selectedTown = $scope.townList[0];
-          $scope.evacuationInfo = {};
-          $scope.sanctuaryList = [];
-          $scope.renderVillageListByTownId();
-      });
-  };
-  $scope.renderVillageListByTownId = function() {
-      var townId = $scope.selectedTown.town_id;
-      dataService.renderVillageListByTownId(townId, function(villageList) {
-          $scope.villageList = villageList;
-          $scope.selectedVillage = $scope.villageList[0];
-          $scope.evacuationInfo = {};
-          $scope.sanctuaryList = [];
-          $scope.renderEvacuationInfoByTownIdAndVillageId();
-      });
-  };
-  $scope.renderEvacuationInfoByTownIdAndVillageId = function() {
-      var townId = $scope.selectedTown.town_id;
-      var villageId = $scope.selectedVillage.village_id;
-      dataService.renderVillageHeadByTownIdAndVillageId(townId, villageId, function(villageHead) {
-          $scope.villageHead = villageHead;
-      });
-      var populationPromise = dataService.renderVillagePopulationByTownIdAndVillageId(townId, villageId, function(villagePopulation) {
-          $scope.population = villagePopulation;
-          $scope.currentPopulation = $scope.population.population;
-      });
-      var shelterPromise =  dataService.renderVillageShelterByTownIdAndVillageId(townId, villageId, function(villageShelter) {
-          $scope.shelter = villageShelter;
-          $scope.currentAccommodation = [].reduce.call($scope.shelter.defaultShelterList, function(totalAccommodation, shelter){
-              shelter.fullAddress = $scope.selectedCounty.county + $scope.selectedTown.town + $scope.selectedVillage.village + shelter.address;
-              try {
-                  if(shelter.openStatus !== '開設') totalAccommodation += 0;
-                  else totalAccommodation += parseInt(shelter.accommodation);
-              } catch(Exception) {
-                  totalAccommodation += 0;
-              } finally {
-                  return totalAccommodation;
-              }
-          }, 0);
-      });
-      $q.all([
-        populationPromise,
-        shelterPromise
-      ]).then(function(data) {
-        $scope.shelterInfo = {
-            currentStatus: $scope.currentAccommodation + '/' + $scope.currentPopulation,
-            currentStatusAppend: '總收容人數/總人口',
-            isEnougn: ($scope.currentAccommodation / $scope.currentPopulation) > 0.9
-        };
-      });
-  };
-  $scope.appendSanctuaryList = function() {
-      $scope.sanctuaryList.push(
-          {
-              "name": "",
-              "accommodation": 0,
-              "address": "",
-              "phoneNumber": ""
-          }
-      );
-  };
-  $scope.updateSanctuaryList = function() {
-      alert('暫時不開放更新～');
-      return;
-    //   var townId = $scope.selectedTown.town_id;
-    //   var villageId = $scope.selectedVillage.village_id;
-    //   var body = angular.copy($scope.evacuationInfo);
-    //   dataService.updateEvacuationInfoByTownIdAndVillageId(townId, villageId, body, function(result) {
-    //       var reCode = parseInt(JSON.parse(result.data).reCode) || 0;
-    //       var reMessage = JSON.parse(result.data).reMessage || "";
-    //       alert(reMessage);
-    //       console.log(JSON.parse(result.data));
-    //   });
-    // angular.copy($scope.evacuationInfo); // return value;
-  };
-  $scope.deleteSanctuary = function(sanctuaryIndex) {
-      $scope.sanctuaryList.splice(sanctuaryIndex, 1);
-  };
-  $scope.deleteSanctuaryList = function() {
-      alert('還沒實作喔～');
-      //TODO
-  };
+    // Initialiation.
+    $scope.countyList = [];
+    $scope.townList = [];
+    $scope.villageList = [];
+    dataService.renderCountyList(function(countyList) {
+        $scope.countyList = countyList;
+        $scope.selectedCounty = $scope.countyList[0];
+        $scope.renderTownListByCountyId();
+    });
+    $scope.renderTownListByCountyId = function() {
+        var countyId = $scope.selectedCounty.county_id;
+        dataService.renderTownListByCountyId(countyId, function(townList) {
+            $scope.townList = townList;
+            $scope.selectedTown = $scope.townList[0];
+            $scope.renderVillageListByTownId();
+        });
+    };
+    $scope.renderVillageListByTownId = function() {
+        var townId = $scope.selectedTown.town_id;
+        dataService.renderVillageListByTownId(townId, function(villageList) {
+            $scope.villageList = villageList;
+            $scope.selectedVillage = $scope.villageList[0];
+            $scope.renderEvacuationInfoByTownIdAndVillageId();
+        });
+    };
+    $scope.renderEvacuationInfoByTownIdAndVillageId = function() {
+        var townId = $scope.selectedTown.town_id;
+        var villageId = $scope.selectedVillage.village_id;
+        dataService.renderVillageHeadByTownIdAndVillageId(townId, villageId, function(villageHead) {
+            $scope.villageHead = villageHead;
+        });
+        var populationPromise = dataService.renderVillagePopulationByTownIdAndVillageId(
+            townId,
+            villageId,
+            function(villagePopulation) {
+                $scope.population = villagePopulation;
+                $scope.currentPopulation = $scope.population.population;
+            }
+        );
+        var shelterPromise = dataService.renderVillageShelterByTownIdAndVillageId(
+            townId,
+            villageId,
+            function(villageShelter) {
+                $scope.shelter = villageShelter;
+                $scope.currentAccommodation = [].reduce.call(
+                    $scope.shelter.defaultShelterList,
+                    function(totalAccommodation, shelter) {
+                        shelter.fullAddress = $scope.selectedCounty.county + $scope.selectedTown.town + $scope.selectedVillage.village + shelter.address;
+                        try {
+                            if(shelter.openStatus !== '開設') totalAccommodation += 0;
+                            else totalAccommodation += parseInt(shelter.accommodation);
+                        } catch(Exception) {
+                            totalAccommodation += 0;
+                        } finally {
+                            return totalAccommodation;
+                        }
+                    },
+                0);
+            }
+        );
+        $q.all([
+            populationPromise,
+            shelterPromise
+        ]).then(function(data) {
+            $scope.shelterInfo = {
+                currentStatus: $scope.currentAccommodation + '/' + $scope.currentPopulation,
+                currentStatusAppend: '總收容人數/總人口',
+                isEnougn: ($scope.currentAccommodation / $scope.currentPopulation) > 0.9
+            };
+        });
+    };
 });
