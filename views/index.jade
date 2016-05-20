@@ -102,10 +102,14 @@ block content
                             ng-click='deleteSanctuary(index)'
                         ) X
                     p
+                        label 適用災害:
+                        span(ng-bind='shelter.disasterType')
+                    p
                         label 避難所名稱:
                         span(ng-bind='shelter.name')
                     p
                         label 避難所住址:
+                        br
                         span(ng-bind='shelter.fullAddress')
                     //
                         p
