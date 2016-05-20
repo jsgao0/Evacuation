@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 router.get('/', function(req, res, next) {
     res.render('index', {
         'title': '疏散避難所圖資',
-        'desc': '目前已匯入資料：各村里(7855)、各村里長(7243)、各村里人口數(7074)、各村里避難所清單(7365)。'
+        'desc': '目前已匯入資料：各村里(完整)、各村里避難所清單(完整)、各村里長(有短缺)、各村里人口數(有短缺)。'
     });
 });
 
