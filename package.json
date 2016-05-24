@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "angular": "^1.5.5",
     "angular-google-maps": "^2.3.3",
     "body-parser": "^1.15.1",
     "express": "^4.13.4",
     "jade": "^1.11.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "requirejs": "^2.2.0"
   },
   "scripts": {
     "start": "node index.js",

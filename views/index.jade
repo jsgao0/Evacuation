@@ -1,6 +1,11 @@
 extends layout
 
 block title
+    script(src='/script/lib/angular-simple-logger.min.js')
+    script(src='/script/lib/angular-google-maps.min.js')
+    script(src='/script/app.js')
+    script(src='/script/config.js')
+    script(src='/script/service.js')
     script(src='/script/controller.js')
 
 block content
@@ -90,6 +95,26 @@ block content
                         class='col-md-4'
                         ng-bind='shelterInfo.currentStatusAppend'
                     )
+
+            div(class='col-xs-12 col-sm-12 col-md-12')
+                ui-gmap-google-map(
+                    center='map.center'
+                    zoom='map.zoom'
+                )
+                    ui-gmap-marker(
+                        coords='marker.coords'
+                        click='onClick(marker)'
+                        options='marker.options'
+                        events='marker.events'
+                        ng-repeat="marker in allShelterMarkers"
+                        idkey='marker.id'
+                    )
+                        ui-gmap-window(
+                            options='marker.windowOptions'
+                            closeClick='closeClick(marker)'
+                        )
+                            div
+                                p(ng-bind='marker.name')
 
             div(class='col-xs-12 col-sm-12 col-md-12 sanctuary-list')
                 div(

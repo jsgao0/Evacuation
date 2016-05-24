@@ -1,141 +1,7 @@
-var uploadApp = angular.module('uploadApp', []);
-
-uploadApp.service('polyfillService', function() {
-    if (typeof(Number.prototype.toRad) === "undefined") {
-        Number.prototype.toRad = function() {
-            return this * Math.PI / 180;
-        };
-    }
-});
-
-uploadApp.service('evacuationRouteService', function() {
-    // TODO
-});
-
-uploadApp.service('dataService', function ($http) {
-    var self = this;
-    self.renderCountyList = function (callback) {
-        var countyList = [];
-        $http({
-            method: 'JSONP',
-            url: 'https://evacuation-restful.herokuapp.com/counties?callback=JSON_CALLBACK'
-        }).then(function (result) {
-            countyList = result.data.countyList;
-            callback(countyList);
-        }, function (response) {
-            console.log(response);
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-        });
-    };
-    self.renderTownListByCountyId = function(countyId, callback) {
-        var townList = [];
-        $http({
-            method: 'JSONP',
-            url: 'https://evacuation-restful.herokuapp.com/' + countyId + '/towns?callback=JSON_CALLBACK'
-        }).then(function (result) {
-            townList = result.data.townList;
-            callback(townList);
-        }, function (response) {
-            console.log(response);
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-        });
-    };
-    self.renderVillageListByTownId = function(townId, callback) {
-        var villageList = [];
-        $http({
-            method: 'JSONP',
-            url: 'https://evacuation-restful.herokuapp.com/' + townId + '/villages?callback=JSON_CALLBACK'
-        }).then(function (result) {
-            villageList = result.data.villageList;
-            callback(villageList);
-        }, function (response) {
-            console.log(response);
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-        });
-    };
-    self.renderVillageHeadByTownIdAndVillageId = function(townId, villageId, callback) {
-        var villageHead = {};
-        $http({
-            method: 'JSONP',
-            url: 'https://evacuation-restful.herokuapp.com/' + townId + '/' + villageId + '/village-head?callback=JSON_CALLBACK'
-        }).then(function (result) {
-            villageHead = result.data.villageHead;
-            callback(villageHead);
-        }, function (response) {
-            console.log(response);
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-        });
-    };
-    self.renderVillagePopulationByTownIdAndVillageId = function(townId, villageId, callback) {
-        var villagePopulation = {};
-        return $http({
-            method: 'JSONP',
-            url: 'https://evacuation-restful.herokuapp.com/' + townId + '/' + villageId + '/population?callback=JSON_CALLBACK'
-        }).then(function (result) {
-            villagePopulation = result.data.villagePopulation;
-            callback(villagePopulation);
-        }, function (response) {
-            console.log(response);
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-        });
-    };
-    self.renderVillageShelterByTownIdAndVillageId = function(townId, villageId, callback) {
-        var villageShelter = {};
-        return $http({
-            method: 'JSONP',
-            url: 'https://evacuation-restful.herokuapp.com/' + townId + '/' + villageId + '/shelters?callback=JSON_CALLBACK'
-        }).then(function (result) {
-            villageShelter = result.data.villageShelter;
-            callback(villageShelter);
-        }, function (response) {
-            console.log(response);
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-        });
-    };
-    self.template = {
-        "location": {
-            "county": "",
-            "town": "",
-            "village": ""
-        },
-        "responseCenter": {
-            "name": "",
-            "phoneNumber": ""
-        },
-        "villageHead": {
-            "name": "",
-            "phoneNumber": "",
-            "cellphoneNumber": ""
-        },
-        "policeStation": {
-            "name": "",
-            "phoneNumber": ""
-        },
-        "fireBrigade": {
-            "name": "",
-            "phoneNumber": ""
-        },
-        "evacuatedDirection": {
-            "sanctuaries": [
-                {
-                    "name": "",
-                    "accommodation": 0,
-                    "address": "",
-                    "phoneNumber": ""
-                }
-            ]
-        }
-    };
-});
-
-
 uploadApp.controller('selectorController', function ($scope, $q, dataService) {
+
+    $scope.map = { center: { latitude: 45, longitude: -73 }, zoom: 8 };
+
     // Initialiation.
     $scope.countyList = [];
     $scope.townList = [];
@@ -204,6 +70,21 @@ uploadApp.controller('selectorController', function ($scope, $q, dataService) {
                 currentStatus: $scope.currentAccommodation + '/' + $scope.currentPopulation,
                 currentStatusAppend: '總收容人數/總人口',
                 isEnougn: ($scope.currentAccommodation / $scope.currentPopulation) > 0.9
+            };
+            $scope.allShelterMarkers = dataService.getShelterMarkers($scope.shelter.defaultShelterList);
+            $scope.map = {
+                center: dataService.getMarkersCenter($scope.allShelterMarkers),
+                zoom: 13
+            };
+            $scope.windowOptions = {
+                visible: false
+            };
+            $scope.onClick = function(marker) {
+                marker.windowOptions.visible = !marker.windowOptions.visible;
+            };
+
+            $scope.closeClick = function() {
+                marker.windowOptions.visible = false;
             };
         });
     };
