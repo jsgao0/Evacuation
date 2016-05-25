@@ -114,7 +114,18 @@ block content
                             closeClick='closeClick(marker)'
                         )
                             div
-                                p(ng-bind='marker.name')
+                                p(data-ng-bind='marker.name')
+                                | {{'避難所名稱：' + marker.name}}
+                                p(data-ng-bind='marker.address')
+                                | {{'避難所住址：' + marker.address}}
+                                p(data-ng-bind='marker.accommodation')
+                                | {{'容納人數：' + marker.accommodation}}
+                                p(data-ng-bind='marker.openStatus')
+                                | {{'開放狀態：' + marker.openStatus}}
+                                p(data-ng-bind='marker.disasterType')
+                                | {{'適用災害：' + marker.disasterType}}
+                                p(data-ng-bind='marker.isOutdoor')
+                                | {{'是否為戶外：' + marker.isOutdoor}}
 
             div(class='col-xs-12 col-sm-12 col-md-12 sanctuary-list')
                 div(

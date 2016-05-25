@@ -83,7 +83,7 @@ uploadApp.controller('selectorController', function ($scope, $q, dataService) {
                 marker.windowOptions.visible = !marker.windowOptions.visible;
             };
 
-            $scope.closeClick = function() {
+            $scope.closeClick = function(marker) {
                 marker.windowOptions.visible = false;
             };
         });

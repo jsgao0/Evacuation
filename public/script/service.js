@@ -112,15 +112,13 @@ uploadApp.service('dataService', function ($http) {
                     windowOptions: {
                         visible: false
                     },
-                    name: "五峰活動中心",
-                    address: "6鄰98號2樓",
-                    accommodation: "110",
-                    lat: "24.6321",
-                    lon: "121.1194",
-                    openStatus: "撤除",
-                    disasterType: "水災,土石流,海嘯",
-                    isOutdoor: "否",
-                    adaptWeaker: "是"
+                    name: rawShelter.name,
+                    address: rawShelter.address,
+                    accommodation: rawShelter.accommodation,
+                    openStatus: rawShelter.openStatus,
+                    disasterType: rawShelter.disasterType,
+                    isOutdoor: rawShelter.isOutdoor,
+                    adaptWeaker: rawShelter.adaptWeaker
                 };
                 distinctShelterMarkers.push(marker);
             }
