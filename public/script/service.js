@@ -129,15 +129,18 @@ uploadApp.service('dataService', function ($http) {
         var sortByLatitude = markerList.sort(function(a, b) {
                 return parseFloat(a.coords.latitude) - parseFloat(b.coords.latitude);
             }
-        ),
+        ).slice(),
             sortByLongitude = markerList.sort(function(a, b) {
                 return parseFloat(a.coords.longitude) - parseFloat(b.coords.longitude);
             }
-        ),
+        ).slice(),
             center = {
                 latitude: (parseFloat(sortByLatitude[markerList.length - 1].coords.latitude) + parseFloat(sortByLatitude[0].coords.latitude)) / 2,
                 longitude: (parseFloat(sortByLongitude[markerList.length - 1].coords.longitude) + parseFloat(sortByLongitude[0].coords.longitude)) / 2
             };
+            console.log(sortByLatitude.map(function(d){return d.coords.latitude;}));
+            console.log(sortByLongitude.map(function(d){return d.coords.longitude;}));
+            console.log(sortByLatitude[markerList.length - 1].coords, sortByLatitude[0].coords, center);
         return center;
     };
 });
